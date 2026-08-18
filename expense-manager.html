@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mintly — Monthly expense manager</title>
+  <style>
+    :root { --ink:#17231d; --muted:#66746d; --paper:#f5f7f2; --card:#fff; --green:#177a4d; --lime:#d9f26b; --coral:#f47a5f; --line:#e4e8e2; }
+    * { box-sizing:border-box; } body { margin:0; color:var(--ink); background:var(--paper); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .shell { max-width:1150px; margin:auto; padding:28px 22px 48px; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:30px; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:21px; letter-spacing:-.6px; } .mark { width:32px; height:32px; display:grid; place-items:center; background:var(--green); color:var(--lime); border-radius:10px; font-size:18px; }
+    .month { font-size:14px; color:var(--muted); background:#edf1e9; padding:9px 12px; border-radius:999px; }
+    .hero { background:var(--green); color:#fff; border-radius:26px; padding:28px; display:grid; grid-template-columns:1.2fr .8fr; gap:28px; overflow:hidden; position:relative; }
+    .hero:after { content:""; width:280px; height:280px; border-radius:50%; background:var(--lime); opacity:.13; position:absolute; right:-110px; bottom:-150px; }
+    .eyebrow { color:var(--lime); font-size:12px; text-transform:uppercase; font-weight:800; letter-spacing:1.2px; margin:0 0 8px; } h1 { margin:0; font-size:clamp(28px,5vw,44px); letter-spacing:-1.8px; line-height:1.02; } .sub { color:#c8e3d5; margin:13px 0 0; }
+    .balance { align-self:center; position:relative; z-index:1; border-left:1px solid #4c9b76; padding-left:28px; } .balance span { display:block; color:#c8e3d5; font-size:13px; } .balance strong { font-size:34px; letter-spacing:-1px; display:block; margin:5px 0; } .balance small { color:var(--lime); }
+    .grid { display:grid; grid-template-columns:1.05fr .95fr; gap:20px; margin-top:20px; } .card { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:22px; box-shadow:0 4px 20px #15332208; }
+    h2 { font-size:17px; margin:0 0 18px; letter-spacing:-.4px; } .metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; } .metric { background:#f6f8f4; border-radius:14px; padding:13px; } .metric span { display:block; font-size:12px; color:var(--muted); } .metric strong { font-size:18px; display:block; margin-top:4px; }
+    .track { height:9px; background:#e8ede6; border-radius:20px; overflow:hidden; margin:19px 0 8px; } .fill { background:linear-gradient(90deg,var(--green),#51ad77); height:100%; border-radius:20px; transition:width .25s; } .smallrow { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; }
+    form { display:grid; grid-template-columns:1fr 1fr; gap:10px; } form h2 { grid-column:1/-1; margin-bottom:4px; } input, select, button { font:inherit; } input, select { padding:11px 12px; border:1px solid var(--line); border-radius:10px; background:#fbfcfa; color:var(--ink); outline:none; } input:focus,select:focus { border-color:var(--green); box-shadow:0 0 0 3px #177a4d15; } .wide { grid-column:1/-1; } button { border:0; border-radius:10px; cursor:pointer; background:var(--green); color:#fff; font-weight:700; padding:12px 14px; } button:hover { filter:brightness(.94); }
+    .categories { margin-top:20px; } .cat { display:grid; grid-template-columns:38px 1fr auto; gap:11px; align-items:center; padding:13px 0; border-bottom:1px solid var(--line); } .cat:last-child { border:0; padding-bottom:0; } .icon { width:36px; height:36px; border-radius:11px; display:grid; place-items:center; background:#edf7ef; font-size:18px; } .cat b { display:block; font-size:14px; } .cat span { color:var(--muted); font-size:12px; } .cat .amount { text-align:right; font-weight:750; font-size:14px; } .cat .amount span { display:block; font-weight:500; }
+    .recent { margin-top:20px; } .transaction { display:grid; grid-template-columns:1fr auto auto; gap:12px; align-items:center; padding:12px 0; border-bottom:1px solid var(--line); } .transaction:last-child { border:0; } .transaction b { font-size:14px; display:block; } .transaction small { color:var(--muted); } .transaction strong { font-size:14px; } .delete { color:#bd3a27; background:#fff0ec; padding:6px 8px; border-radius:8px; font-size:12px; }
+    .empty { color:var(--muted); font-size:14px; padding:10px 0; }.tip { margin-top:20px; background:#eff7cf; border:1px solid #dce8ab; padding:15px; border-radius:14px; font-size:13px; line-height:1.45; } .tip b { color:#47611a; }
+    @media(max-width:720px) { .hero,.grid { grid-template-columns:1fr; } .balance { border-left:0; padding-left:0; border-top:1px solid #4c9b76; padding-top:18px; } .metrics { grid-template-columns:1fr; } header { margin-bottom:20px; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header><div class="brand"><div class="mark">₹</div>Mintly</div><div class="month" id="monthLabel"></div></header>
+    <section class="hero"><div><p class="eyebrow">Your monthly plan</p><h1>Spend with<br>calm, not guesswork.</h1><p class="sub">A simple view of where your ₹15,000 budget is going.</p></div><div class="balance"><span>Available to spend</span><strong id="available">₹15,000</strong><small id="remainingText">100% of budget remaining</small></div></section>
+    <section class="grid">
+      <div>
+        <article class="card"><h2>Monthly snapshot</h2><div class="metrics"><div class="metric"><span>Budget</span><strong>₹15,000</strong></div><div class="metric"><span>Spent</span><strong id="spent">₹0</strong></div><div class="metric"><span>Daily allowance</span><strong id="daily">₹500</strong></div></div><div class="track"><div class="fill" id="budgetFill"></div></div><div class="smallrow"><span id="progressLabel">No expenses yet</span><span id="percent">0%</span></div><div class="tip" id="tip"><b>Small win:</b> You have the full budget available. Add an expense when you make one.</div></article>
+        <article class="card categories"><h2>Spending by category</h2><div id="categoryList"></div></article>
+      </div>
+      <div>
+        <article class="card"><form id="expenseForm"><h2>Add an expense</h2><input class="wide" id="title" required maxlength="40" placeholder="What did you spend on?" /><input id="amount" required type="number" min="1" step="1" placeholder="Amount (₹)" /><select id="category"><option>Food</option><option>Transport</option><option>Bills</option><option>Shopping</option><option>Health</option><option>Fun</option><option>Other</option></select><input class="wide" id="date" type="date" required /><button class="wide" type="submit">Add expense</button></form></article>
+        <article class="card recent"><h2>Recent expenses</h2><div id="transactions"></div></article>
+      </div>
+    </section>
+  </main>
+  <script>
+    const BUDGET=15000, key='mintly-expenses-v1';
+    const icons={Food:'🍲',Transport:'🚌',Bills:'⚡',Shopping:'🛍️',Health:'🌿',Fun:'🎬',Other:'•'};
+    const money=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+    const dateInput=document.querySelector('#date'); dateInput.value=new Date().toISOString().slice(0,10);
+    document.querySelector('#monthLabel').textContent=new Intl.DateTimeFormat('en-IN',{month:'long',year:'numeric'}).format(new Date());
+    let expenses=JSON.parse(localStorage.getItem(key)||'[]');
+    function save(){localStorage.setItem(key,JSON.stringify(expenses));}
+    function render(){
+      const total=expenses.reduce((a,x)=>a+x.amount,0), remaining=BUDGET-total, pct=Math.min(100,Math.max(0,total/BUDGET*100));
+      document.querySelector('#spent').textContent=money(total); document.querySelector('#available').textContent=money(remaining); document.querySelector('#budgetFill').style.width=pct+'%'; document.querySelector('#percent').textContent=Math.round(pct)+'%';
+      document.querySelector('#progressLabel').textContent=total?money(total)+' used of '+money(BUDGET):'No expenses yet';
+      const today=new Date(), daysLeft=new Date(today.getFullYear(),today.getMonth()+1,0).getDate()-today.getDate()+1;
+      document.querySelector('#daily').textContent=money(Math.max(0,remaining)/daysLeft);
+      document.querySelector('#remainingText').textContent=remaining>=0?Math.round(Math.max(0,remaining)/BUDGET*100)+'% of budget remaining':'Over budget by '+money(-remaining);
+      const tip=document.querySelector('#tip'); tip.innerHTML=remaining<0?'<b>Budget alert:</b> You are '+money(-remaining)+' over budget. Consider pausing non-essential spending.':total===0?'<b>Small win:</b> You have the full budget available. Add an expense when you make one.':'<b>Stay on track:</b> You can spend about '+money(Math.max(0,remaining)/daysLeft)+' per day for the rest of this month.';
+      const grouped=Object.entries(expenses.reduce((o,x)=>{o[x.category]=(o[x.category]||0)+x.amount;return o;},{})).sort((a,b)=>b[1]-a[1]);
+      document.querySelector('#categoryList').innerHTML=grouped.length?grouped.map(([cat,val])=>`<div class="cat"><div class="icon">${icons[cat]}</div><div><b>${cat}</b><span>${Math.round(val/BUDGET*100)}% of budget</span></div><div class="amount">${money(val)}<span>${money(BUDGET-val)} left</span></div></div>`).join(''):'<div class="empty">Your category breakdown will appear here.</div>';
+      const list=[...expenses].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8); document.querySelector('#transactions').innerHTML=list.length?list.map(x=>`<div class="transaction"><div><b>${x.title}</b><small>${icons[x.category]} ${x.category} · ${new Date(x.date+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short'})}</small></div><strong>${money(x.amount)}</strong><button class="delete" data-id="${x.id}">Remove</button></div>`).join(''):'<div class="empty">No expenses logged this month.</div>';
+      document.querySelectorAll('.delete').forEach(b=>b.onclick=()=>{expenses=expenses.filter(x=>x.id!==Number(b.dataset.id));save();render();});
+    }
+    document.querySelector('#expenseForm').onsubmit=e=>{e.preventDefault();const title=document.querySelector('#title'),amount=document.querySelector('#amount'); expenses.push({id:Date.now(),title:title.value.trim(),amount:Number(amount.value),category:document.querySelector('#category').value,date:dateInput.value});save();e.target.reset();dateInput.value=new Date().toISOString().slice(0,10);render();}; render();
+  </script>
+</body>
+</html>
+
