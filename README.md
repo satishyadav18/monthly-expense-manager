@@ -18,6 +18,6 @@ Open `expense-manager.html` in any modern browser. Add expenses, view category t
 ## Enable cloud accounts
 
 1. In Supabase, open **SQL Editor** and run the contents of `supabase-setup.sql` once.
-2. In **Authentication → URL Configuration**, add `https://satishyadav18.github.io/monthly-expense-manager/` as a redirect URL.
+2. In **Authentication → URL Configuration**, set the Site URL to `https://satishyadav18.github.io/monthly-expense-manager/` and add the same address as a redirect URL.
 3. Users can then select **Sign in** in the app to create an account or access their saved expenses.
 
