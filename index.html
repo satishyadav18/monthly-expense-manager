@@ -2,12 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="refresh" content="0; url=expense-manager.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mintly — Monthly expense manager</title>
 </head>
 <body>
-  <p>Opening <a href="expense-manager.html">Mintly Expense Manager</a>…</p>
+  <p>Opening <a id="appLink" href="expense-manager.html">Mintly Expense Manager</a>…</p>
+  <script>
+    // Preserve Supabase's confirmation code/token when redirecting to the app.
+    const destination = `expense-manager.html${window.location.search}${window.location.hash}`;
+    document.querySelector('#appLink').href = destination;
+    window.location.replace(destination);
+  </script>
 </body>
 </html>
 
